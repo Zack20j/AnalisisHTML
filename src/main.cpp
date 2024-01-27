@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include "src/logic/engine.hpp"
+#include "logic/engine.hpp"
 
 int main() {
     std::string htmlBalanceado = R"(
@@ -25,7 +25,7 @@ int main() {
           <p>Parrafo 8</p>
           <p>Parrafo 9</p>
           <p>Parrafo 10</p>
-          <div >
+          <div>
             <p>hola mundo</p>
             <p>el resultado de 10/2 es 5 10 < 5 </p>
             

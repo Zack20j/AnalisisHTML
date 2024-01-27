@@ -20,8 +20,7 @@ std::string obtenerPrimeraPalabra(const std::string& texto) {
     return "";
 }
 
-bool esHTMLBalanceado(const std::string& texto,
-                      std::map<std::string, int>& contadorEtiquetas) {
+bool esHTMLBalanceado(const std::string& texto,std::map<std::string, int>& contadorEtiquetas) {
     std::stack<std::string> pila;
 
     std::map<std::string, int> etiquetasPermitidas = {
