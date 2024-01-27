@@ -25,24 +25,19 @@ int main() {
           <p>Parrafo 8</p>
           <p>Parrafo 9</p>
           <p>Parrafo 10</p>
-          <div>
+          <div class="container">
             <p>hola mundo</p>
             <p>el resultado de 10/2 es 5 10 < 5 </p>
-            
+            <a rel="noopener noreferrer" href="https://www.ejemplo.com"/>
+            <link real="stylesheet" href="https://www.ejemplo1.com"/> 
+            <img src="https://www.ejemplo de imagen.com" />
           </div>
         </body>
         </html>
     )";
 
-    std::map<std::string, int> contadorEtiquetas;
-
-    if (esHTMLBalanceado(htmlBalanceado, contadorEtiquetas)) {
+    if (esHTMLBalanceado(htmlBalanceado)) {
         std::cout << "El HTML esta bien balanceado." << std::endl;
-
-        for (const auto& par : contadorEtiquetas) {
-            std::cout << "Etiqueta: " << par.first
-                      << ", Contador: " << par.second << std::endl;
-        }
     } else {
         std::cout << "El HTML esta mal balanceado." << std::endl;
     }

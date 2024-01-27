@@ -5,7 +5,8 @@
 #include <map>
 
 std::string obtenerPrimeraPalabra(const std::string& texto);
-bool esHTMLBalanceado(const std::string& texto,std::map<std::string, int>& contadorEtiquetas);
+bool esHTMLBalanceado(const std::string& texto);
+std::string obtenerUltimosDosCaracteres(const std::string& str);
 
 
 #endif  // ENGINE_HPP

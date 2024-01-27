@@ -5,38 +5,46 @@
 #include <regex>
 #include <stack>
 #include <string>
+#include "obtenerEtiquetasPermitidas.hpp"
 
 std::string obtenerPrimeraPalabra(const std::string& texto) {
-    // Expresion regular para encontrar la primera palabra
     std::regex patron("\\b\\w+\\b");
-
-    // Buscar la primera palabra en el texto
     std::smatch matches;
+
     if (std::regex_search(texto, matches, patron)) {
         return matches.str();
     }
 
-    // Si no se encuentra ninguna palabra, devolver una cadena vacia
     return "";
 }
 
-bool esHTMLBalanceado(const std::string& texto,std::map<std::string, int>& contadorEtiquetas) {
-    std::stack<std::string> pila;
+std::string obtenerUltimosDosCaracteres(const std::string& str) {
+    if (str.length() >= 2) {
+        //std :: cout << str.substr(str.length() - 2) << std :: endl;
+        return str.substr(str.length() - 2);
+    } else {
+        return str;
+    }
+}
 
-    std::map<std::string, int> etiquetasPermitidas = {
-        {"h1", 0},   {"h2", 0},  {"p", 0}, {"body", 0}, {"html", 0},
-        {"head", 0}, {"div", 0}, {"a", 0}, {"title", 0}};
+bool esHTMLBalanceado(const std::string& texto) {
+    std::stack<std::string> pila;
+    std::map<std::string, int> etiquetasPermitidas = obtenerEtiquetasPermitidas();
+
+ 
 
     std::regex patron("<[^<>]*>");
-
     std::sregex_iterator it(texto.begin(), texto.end(), patron);
     std::sregex_iterator itEnd;
 
-    int totalEtiquetas = 0;
-
-    std::regex patronEnlace("<a\\s+[^>]*href=\"([^\"]*)\"[^>]*>");
+    std::regex patronEnlace("<(?:a|link)\\s+[^>]*href=\"([^\"]*)\"[^>]*>");
     std::smatch matchesEnlace;
 
+    std::regex patronImagen("<img\\s+[^>]*src=\"([^\"]*)\"[^>]*>");  
+    std::smatch matchesImagen;
+
+    int totalEtiquetas = 0;
+    
     for (; it != itEnd; ++it) {
         std::string match = it->str();
 
@@ -48,40 +56,51 @@ bool esHTMLBalanceado(const std::string& texto,std::map<std::string, int>& conta
         auto itEtiqueta = etiquetasPermitidas.find(tag);
 
         if (itEtiqueta == etiquetasPermitidas.end()) {
-            // La etiqueta no es permitida
             return false;
         }
-        itEtiqueta->second++;
-        totalEtiquetas++;
 
-        if (match.find('/') == std::string::npos) {
-            pila.push(tag);
-        } else {
+        std::string link = match;
+        while (std::regex_search(link, matchesEnlace, patronEnlace)) {
+            std::cout << "Enlace: " << matchesEnlace[1].str() << std::endl;
+            link = matchesEnlace.suffix();
+        }
+
+        std::string image = match;
+        while (std::regex_search(image, matchesImagen, patronImagen)) {
+            std::cout << "Imagen: " << matchesImagen[1].str() << std::endl;
+            image = matchesImagen.suffix();
+        }
+
+        if (obtenerUltimosDosCaracteres(match) == "/>") {
+            std :: cout << "Etiqueta de autocierre: " << std::endl;
+            itEtiqueta->second++;
+            totalEtiquetas++;
+        }
+
+        else if (match.find("</") == 0) {
+            //std :: cout << "Etiqueta de cierre: " << std::endl;
             if (pila.empty() || tag != pila.top()) {
                 return false;
             }
-
-            // std::string ultimaEtiquetaApertura = pila.top();
             pila.pop();
 
-            /*if ( tag !=  ultimaEtiquetaApertura ) {
-                return false;
-            }*/
-            while (std::regex_search(match, matchesEnlace, patronEnlace)) {
-                std::cout << "Enlace: " << matchesEnlace[1].str() << std::endl;
-                match = matchesEnlace.suffix();
-            }
+            itEtiqueta->second++; 
+            totalEtiquetas++;
+
+        }else {
+            //std :: cout << "Etiqueta de apertura: " << std::endl;
+            pila.push(tag);
         }
     }
 
-    std::cout << "Porcentaje de etiquetas:" << std::endl;
-    for (const auto& par : etiquetasPermitidas) {
-        double porcentaje = (par.second * 100.0) / totalEtiquetas;
-        std::cout << "Etiqueta: " << par.first << ", Contador: " << par.second
-                  << ", Porcentaje: " << std::fixed << std::setprecision(2)
-                  << porcentaje << "%" << std::endl;
-    }
-
-    // contadorEtiquetas = etiquetasPermitidas;
+    std::cout << "Etiquetas:" << std::endl;
+     for (const auto& par : etiquetasPermitidas) {
+         if (par.second > 0) {
+             double porcentaje = (par.second * 100.0) / totalEtiquetas;
+             std::cout << "Etiqueta: " << par.first << ", Contador: " << par.second
+                       << ", Porcentaje: " << std::fixed << std::setprecision(2)
+                       << porcentaje << "%" << std::endl;
+         }
+     }
     return pila.empty();
 }
