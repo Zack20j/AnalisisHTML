@@ -1,4 +1,3 @@
-
 #include <map>
 #include <string>
 
@@ -21,19 +20,8 @@ std::map<std::string, int> obtenerEtiquetasPermitidas( ) {
     {"span", 0},
     {"ul", 0},
     {"ol", 0},
-    {"li", 0},{"html", 0},
-    {"head", 0},
-    {"title", 0},
-    {"body", 0},
-    {"h1", 0},
-    {"h2", 0},
-    {"h3", 0},
-    {"h4", 0},
-    {"h5", 0},
-    {"h6", 0},
-    {"p", 0},
-    {"a", 0},
-    {"img", 0},
+    {"li", 0},
+    {"html", 0},
     {"br", 0},
     {"hr", 0},
     {"table", 0},
@@ -57,6 +45,7 @@ std::map<std::string, int> obtenerEtiquetasPermitidas( ) {
     {"i", 0},
     {"u", 0},
     {"sub", 0},
+    {"meta", 0},
     {"sup", 0}
 };
 }

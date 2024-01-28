@@ -1,46 +1,43 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
+#include <fstream>
 #include "logic/engine.hpp"
 
 int main() {
-    std::string htmlBalanceado = R"(
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Mi pagina web</title>
-        </head>
-        <body>
+  std::string nombreArchivoHTML = "../index.html";
 
-          <h1>Mi pagina web</h1>
-          <h2>Subtitulo 1</h2>
-          <p>Parrafo 1</p>
-          <p>Parrafo 2</p>
-          <p>Parrafo 3</p>
-          <p>Parrafo 4</p>
-          <p>Parrafo 5</p>
-          <h2>Subtitulo 2</h2>
-          <p>Parrafo 6</p>
-          <p>Parrafo 7</p>
-          <p>Parrafo 8</p>
-          <p>Parrafo 9</p>
-          <p>Parrafo 10</p>
-          <div class="container">
-            <p>hola mundo</p>
-            <p>el resultado de 10/2 es 5 10 < 5 </p>
-            <a rel="noopener noreferrer" href="https://www.ejemplo.com"/>
-            <link real="stylesheet" href="https://www.ejemplo1.com"/> 
-            <img src="https://www.ejemplo de imagen.com" />
-          </div>
-        </body>
-        </html>
-    )";
+     std::ifstream archivoHTML(nombreArchivoHTML);
+    if (!archivoHTML.is_open()) {
+        std::cerr << "Error al abrir el archivo: " << nombreArchivoHTML << std::endl;
+        return 1;
+    }
 
-    if (esHTMLBalanceado(htmlBalanceado)) {
+    std::string contenidoHTML((std::istreambuf_iterator<char>(archivoHTML)),
+                              std::istreambuf_iterator<char>());
+
+    archivoHTML.close();
+
+    if (esHTMLBalanceado(contenidoHTML)) {
         std::cout << "El HTML esta bien balanceado." << std::endl;
     } else {
         std::cout << "El HTML esta mal balanceado." << std::endl;
     }
+
+    /*if (esHTMLBalanceado(htmlBalanceado)) {
+        std::cout << "El HTML esta bien balanceado." << std::endl;
+        //std::map<std::string, std::vector<std::string>> atributos = obtenerAtributos(htmlBalanceado);
+
+        for (const auto& par : atributos) {
+            std::cout << "Etiqueta: <" << par.first << ">" << std::endl;
+              for (const auto& atributo : par.second) {
+                  std::cout << "  Atributo: " << atributo << std::endl;
+              }
+        }
+    }else {
+        std::cout << "El HTML esta mal balanceado." << std::endl;
+    }*/
 
     return 0;
 }

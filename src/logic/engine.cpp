@@ -6,6 +6,7 @@
 #include <stack>
 #include <string>
 #include "obtenerEtiquetasPermitidas.hpp"
+#include "obtenerEtiquetasAtributos.hpp"
 
 std::string obtenerPrimeraPalabra(const std::string& texto) {
     std::regex patron("\\b\\w+\\b");
@@ -27,13 +28,31 @@ std::string obtenerUltimosDosCaracteres(const std::string& str) {
     }
 }
 
+std::map<std::string, std::vector<std::string>> obtenerAtributos(const std::string& match) {
+    std::map<std::string, std::vector<std::string>> atributosPorEtiqueta = obtenerEtiquetasAtributos();
+
+    std::regex patronAtributos("\\s+([^=\\s]+)=\"([^\"]*)\"");
+    std::sregex_iterator itAtributos(match.begin(), match.end(), patronAtributos);
+    std::sregex_iterator itAtributosEnd;
+
+    // Extraer atributos para la etiqueta correspondiente
+    if (itAtributos != itAtributosEnd) {
+        std::string etiqueta = obtenerPrimeraPalabra(match); // Obtener el nombre de la etiqueta
+        do {
+            std::string nombreAtributo = itAtributos->str(1);
+            atributosPorEtiqueta[etiqueta].push_back(nombreAtributo);
+            ++itAtributos;
+        } while (itAtributos != itAtributosEnd);
+    }
+
+    return atributosPorEtiqueta;
+}
+
 bool esHTMLBalanceado(const std::string& texto) {
     std::stack<std::string> pila;
     std::map<std::string, int> etiquetasPermitidas = obtenerEtiquetasPermitidas();
 
- 
-
-    std::regex patron("<[^<>]*>");
+    std::regex patron("<[^><]*>");
     std::sregex_iterator it(texto.begin(), texto.end(), patron);
     std::sregex_iterator itEnd;
 
@@ -59,6 +78,20 @@ bool esHTMLBalanceado(const std::string& texto) {
             return false;
         }
 
+        std::map<std::string, std::vector<std::string>> atributos = obtenerAtributos(match);
+
+        // Imprimir atributos
+       if (!atributos[tag].empty()) {
+            std::cout << "Etiqueta: " << tag << ", Atributos: ";
+            
+            // Imprimir atributos
+            for (const auto& atributo : atributos[tag]) {
+                std::cout << atributo << " ";
+            }
+
+            std::cout << std::endl;
+        }
+
         std::string link = match;
         while (std::regex_search(link, matchesEnlace, patronEnlace)) {
             std::cout << "Enlace: " << matchesEnlace[1].str() << std::endl;
@@ -72,7 +105,6 @@ bool esHTMLBalanceado(const std::string& texto) {
         }
 
         if (obtenerUltimosDosCaracteres(match) == "/>") {
-            std :: cout << "Etiqueta de autocierre: " << std::endl;
             itEtiqueta->second++;
             totalEtiquetas++;
         }
