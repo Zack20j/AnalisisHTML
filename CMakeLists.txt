@@ -7,6 +7,7 @@ add_executable(${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/src/logic/engine.cpp
     ${PROJECT_SOURCE_DIR}/src/graphics/scenes.cpp
     ${PROJECT_SOURCE_DIR}/src/storage/archive.cpp
+    ${PROJECT_SOURCE_DIR}/src/storage/htmlInfo.cpp
     )
 
 target_include_directories(${PROJECT_NAME} PUBLIC 

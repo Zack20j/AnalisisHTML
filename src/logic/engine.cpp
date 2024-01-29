@@ -1,14 +1,19 @@
-#include "engine.hpp"
 #include <iomanip>
 #include <iostream>
 #include <map>
 #include <regex>
 #include <stack>
 #include <string>
+#include "engine.hpp"
+#include "htmlInfo.hpp"
 #include "obtenerEtiquetasPermitidas.hpp"
 #include "obtenerEtiquetasAtributos.hpp"
 
-std::string obtenerPrimeraPalabra(const std::string& texto) {
+
+AnalisisHTML::AnalisisHTML() {
+}
+
+std::string AnalisisHTML:: obtenerPrimeraPalabra(const std::string& texto) {
     std::regex patron("\\b\\w+\\b");
     std::smatch matches;
 
@@ -19,7 +24,23 @@ std::string obtenerPrimeraPalabra(const std::string& texto) {
     return "";
 }
 
-std::string obtenerUltimosDosCaracteres(const std::string& str) {
+std::vector<std::string> AnalisisHTML::joinVectors( std::vector<std::string>& vector1,  std::vector<std::string>& vector2) {
+    std::vector<std::string> resultado;
+
+    // Insertar elementos de vector1
+    resultado.insert(resultado.end(), vector1.begin(), vector1.end());
+
+    // Insertar elementos de vector2 que no estén en vector1
+    for (const auto& elemento : vector2) {
+        if (std::find(vector1.begin(), vector1.end(), elemento) == vector1.end()) {
+            resultado.push_back(elemento);
+        }
+    }
+
+    return resultado;
+}
+
+std::string AnalisisHTML:: obtenerUltimosDosCaracteres(const std::string& str) {
     if (str.length() >= 2) {
         //std :: cout << str.substr(str.length() - 2) << std :: endl;
         return str.substr(str.length() - 2);
@@ -28,14 +49,13 @@ std::string obtenerUltimosDosCaracteres(const std::string& str) {
     }
 }
 
-std::map<std::string, std::vector<std::string>> obtenerAtributos(const std::string& match) {
+std::map<std::string, std::vector<std::string>> AnalisisHTML:: obtenerAtributos(const std::string& match) {
     std::map<std::string, std::vector<std::string>> atributosPorEtiqueta = obtenerEtiquetasAtributos();
 
     std::regex patronAtributos("\\s+([^=\\s]+)=\"([^\"]*)\"");
     std::sregex_iterator itAtributos(match.begin(), match.end(), patronAtributos);
     std::sregex_iterator itAtributosEnd;
 
-    // Extraer atributos para la etiqueta correspondiente
     if (itAtributos != itAtributosEnd) {
         std::string etiqueta = obtenerPrimeraPalabra(match); // Obtener el nombre de la etiqueta
         do {
@@ -47,22 +67,32 @@ std::map<std::string, std::vector<std::string>> obtenerAtributos(const std::stri
 
     return atributosPorEtiqueta;
 }
+std::vector<std::string> AnalisisHTML:: encontrarCoincidencias(std::string texto,std::string expresionRegular) {
+    std::vector<std::string> coincidencias;
+    std::string link = texto;
+    std::regex patronEnlace(expresionRegular);
+    std::smatch matchesEnlace;
 
-bool esHTMLBalanceado(const std::string& texto) {
+    while (std::regex_search(link, matchesEnlace, patronEnlace)) {
+        coincidencias.push_back(matchesEnlace[1].str());
+        link = matchesEnlace.suffix();
+    }
+
+    return coincidencias;
+}
+
+EtiquetaInfo AnalisisHTML:: analizarHTML(const std::string& texto) {
+
     std::stack<std::string> pila;
+    EtiquetaInfo etiquetaInfo;
+    bool esBalanceado = true;
     std::map<std::string, int> etiquetasPermitidas = obtenerEtiquetasPermitidas();
 
+    int totalEtiquetas = 0;
+    
     std::regex patron("<[^><]*>");
     std::sregex_iterator it(texto.begin(), texto.end(), patron);
     std::sregex_iterator itEnd;
-
-    std::regex patronEnlace("<(?:a|link)\\s+[^>]*href=\"([^\"]*)\"[^>]*>");
-    std::smatch matchesEnlace;
-
-    std::regex patronImagen("<img\\s+[^>]*src=\"([^\"]*)\"[^>]*>");  
-    std::smatch matchesImagen;
-
-    int totalEtiquetas = 0;
     
     for (; it != itEnd; ++it) {
         std::string match = it->str();
@@ -75,64 +105,41 @@ bool esHTMLBalanceado(const std::string& texto) {
         auto itEtiqueta = etiquetasPermitidas.find(tag);
 
         if (itEtiqueta == etiquetasPermitidas.end()) {
-            return false;
+            etiquetaInfo.etiquetasNoPermitidas.push_back(tag);
+            continue;
         }
 
         std::map<std::string, std::vector<std::string>> atributos = obtenerAtributos(match);
 
-        // Imprimir atributos
-       if (!atributos[tag].empty()) {
-            std::cout << "Etiqueta: " << tag << ", Atributos: ";
-            
-            // Imprimir atributos
-            for (const auto& atributo : atributos[tag]) {
-                std::cout << atributo << " ";
-            }
+        etiquetaInfo.atributosPorEtiqueta[tag] = joinVectors(etiquetaInfo.atributosPorEtiqueta[tag], atributos[tag]);
+ 
+        std::vector<std::string> links = encontrarCoincidencias(match, "(?:a|link)\\s+[^>]*href=\"([^\"]*)\"[^>]*");
+        std::vector<std::string> images = encontrarCoincidencias(match, "<img\\s+[^>]*src=\"([^\"]*)\"[^>]*>");
 
-            std::cout << std::endl;
-        }
+        etiquetaInfo.enlacesPorEtiqueta[tag] = joinVectors(etiquetaInfo.enlacesPorEtiqueta[tag], links);
+        etiquetaInfo.imagenesPorEtiqueta[tag] = joinVectors(etiquetaInfo.imagenesPorEtiqueta[tag], images);
 
-        std::string link = match;
-        while (std::regex_search(link, matchesEnlace, patronEnlace)) {
-            std::cout << "Enlace: " << matchesEnlace[1].str() << std::endl;
-            link = matchesEnlace.suffix();
-        }
-
-        std::string image = match;
-        while (std::regex_search(image, matchesImagen, patronImagen)) {
-            std::cout << "Imagen: " << matchesImagen[1].str() << std::endl;
-            image = matchesImagen.suffix();
-        }
 
         if (obtenerUltimosDosCaracteres(match) == "/>") {
-            itEtiqueta->second++;
-            totalEtiquetas++;
+
+            etiquetaInfo.contadorEtiquetas[tag]++;
+            etiquetaInfo.totalEtiquetas++;
         }
 
         else if (match.find("</") == 0) {
-            //std :: cout << "Etiqueta de cierre: " << std::endl;
             if (pila.empty() || tag != pila.top()) {
-                return false;
+                etiquetaInfo.balanceado = false;
             }
             pila.pop();
-
-            itEtiqueta->second++; 
-            totalEtiquetas++;
+            
+            etiquetaInfo.contadorEtiquetas[tag]++;
+            etiquetaInfo.totalEtiquetas++;
 
         }else {
-            //std :: cout << "Etiqueta de apertura: " << std::endl;
             pila.push(tag);
         }
     }
 
-    std::cout << "Etiquetas:" << std::endl;
-     for (const auto& par : etiquetasPermitidas) {
-         if (par.second > 0) {
-             double porcentaje = (par.second * 100.0) / totalEtiquetas;
-             std::cout << "Etiqueta: " << par.first << ", Contador: " << par.second
-                       << ", Porcentaje: " << std::fixed << std::setprecision(2)
-                       << porcentaje << "%" << std::endl;
-         }
-     }
-    return pila.empty();
+    etiquetaInfo.balanceado = pila.empty();
+    return etiquetaInfo;
 }

@@ -45,7 +45,6 @@ std::map<std::string, int> obtenerEtiquetasPermitidas( ) {
     {"i", 0},
     {"u", 0},
     {"sub", 0},
-    {"meta", 0},
     {"sup", 0}
 };
 }

@@ -48,8 +48,6 @@ std::map<std::string, std::vector<std::string>> obtenerEtiquetasAtributos( ) {
     {"i", {}},
     {"u", {}},
     {"sub", {}},
-    {"sup", {}},
-    {"meta", {}},
-    {"li", {}}
+    {"sup", {}}
     };
 }
