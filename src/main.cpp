@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <iomanip>
 #include "htmlInfo.hpp"
 #include "logic/engine.hpp"
 
@@ -57,6 +58,12 @@ int main() {
     std :: cout << "Balanceado: " << info.balanceado << std :: endl;
 
 
+
+    for (const auto& par : info.contadorEtiquetas) {
+
+        std::cout << "Etiqueta: " << par.first << ", Contador: " << par.second << std::endl;
+
+    }
     /*std::cout << "Etiquetas:" << std::endl;
     for (const auto& par : etiquetasPermitidas) {
         if (par.second > 0) {
