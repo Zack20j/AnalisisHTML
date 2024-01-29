@@ -10,7 +10,7 @@ class AnalisisHTML {
     public:
 
     AnalisisHTML();
-    EtiquetaInfo analizarHTML(const std::string& texto);
+    EtiquetaInfo analizarHTML(const std::string texto);
 
     private:
 

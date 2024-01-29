@@ -9,7 +9,6 @@
 #include "obtenerEtiquetasPermitidas.hpp"
 #include "obtenerEtiquetasAtributos.hpp"
 
-
 AnalisisHTML::AnalisisHTML() {
 }
 
@@ -49,24 +48,6 @@ std::string AnalisisHTML:: obtenerUltimosDosCaracteres(const std::string& str) {
     }
 }
 
-std::map<std::string, std::vector<std::string>> AnalisisHTML:: obtenerAtributos(const std::string& match) {
-    std::map<std::string, std::vector<std::string>> atributosPorEtiqueta = obtenerEtiquetasAtributos();
-
-    std::regex patronAtributos("\\s+([^=\\s]+)=\"([^\"]*)\"");
-    std::sregex_iterator itAtributos(match.begin(), match.end(), patronAtributos);
-    std::sregex_iterator itAtributosEnd;
-
-    if (itAtributos != itAtributosEnd) {
-        std::string etiqueta = obtenerPrimeraPalabra(match); // Obtener el nombre de la etiqueta
-        do {
-            std::string nombreAtributo = itAtributos->str(1);
-            atributosPorEtiqueta[etiqueta].push_back(nombreAtributo);
-            ++itAtributos;
-        } while (itAtributos != itAtributosEnd);
-    }
-
-    return atributosPorEtiqueta;
-}
 std::vector<std::string> AnalisisHTML:: encontrarCoincidencias(std::string texto,std::string expresionRegular) {
     std::vector<std::string> coincidencias;
     std::string link = texto;
@@ -81,14 +62,11 @@ std::vector<std::string> AnalisisHTML:: encontrarCoincidencias(std::string texto
     return coincidencias;
 }
 
-EtiquetaInfo AnalisisHTML:: analizarHTML(const std::string& texto) {
+EtiquetaInfo AnalisisHTML:: analizarHTML(const std::string texto) {
 
     std::stack<std::string> pila;
     EtiquetaInfo etiquetaInfo;
-    bool esBalanceado = true;
     std::map<std::string, int> etiquetasPermitidas = obtenerEtiquetasPermitidas();
-
-    int totalEtiquetas = 0;
     
     std::regex patron("<[^><]*>");
     std::sregex_iterator it(texto.begin(), texto.end(), patron);
@@ -109,19 +87,16 @@ EtiquetaInfo AnalisisHTML:: analizarHTML(const std::string& texto) {
             continue;
         }
 
-        std::map<std::string, std::vector<std::string>> atributos = obtenerAtributos(match);
-
-        etiquetaInfo.atributosPorEtiqueta[tag] = joinVectors(etiquetaInfo.atributosPorEtiqueta[tag], atributos[tag]);
- 
+        std::vector<std::string> atributos = encontrarCoincidencias(match, "\\s+([^=\\s]+)=\"([^\"]*)\"");
         std::vector<std::string> links = encontrarCoincidencias(match, "(?:a|link)\\s+[^>]*href=\"([^\"]*)\"[^>]*");
         std::vector<std::string> images = encontrarCoincidencias(match, "<img\\s+[^>]*src=\"([^\"]*)\"[^>]*>");
 
+        etiquetaInfo.atributosPorEtiqueta[tag] = joinVectors(etiquetaInfo.atributosPorEtiqueta[tag], atributos);
         etiquetaInfo.enlacesPorEtiqueta[tag] = joinVectors(etiquetaInfo.enlacesPorEtiqueta[tag], links);
         etiquetaInfo.imagenesPorEtiqueta[tag] = joinVectors(etiquetaInfo.imagenesPorEtiqueta[tag], images);
 
 
         if (obtenerUltimosDosCaracteres(match) == "/>") {
-
             etiquetaInfo.contadorEtiquetas[tag]++;
             etiquetaInfo.totalEtiquetas++;
         }
