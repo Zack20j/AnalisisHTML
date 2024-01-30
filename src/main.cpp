@@ -1,16 +1,17 @@
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
-#include <fstream>
 #include "logic/engine.hpp"
 
 int main() {
-  std::string nombreArchivoHTML = "../index.html";
+    std::string nombreArchivoHTML = "../index.html";
 
-     std::ifstream archivoHTML(nombreArchivoHTML);
+    std::ifstream archivoHTML(nombreArchivoHTML);
     if (!archivoHTML.is_open()) {
-        std::cerr << "Error al abrir el archivo: " << nombreArchivoHTML << std::endl;
+        std::cerr << "Error al abrir el archivo: " << nombreArchivoHTML
+                  << std::endl;
         return 1;
     }
 
@@ -27,7 +28,8 @@ int main() {
 
     /*if (esHTMLBalanceado(htmlBalanceado)) {
         std::cout << "El HTML esta bien balanceado." << std::endl;
-        //std::map<std::string, std::vector<std::string>> atributos = obtenerAtributos(htmlBalanceado);
+        //std::map<std::string, std::vector<std::string>> atributos =
+    obtenerAtributos(htmlBalanceado);
 
         for (const auto& par : atributos) {
             std::cout << "Etiqueta: <" << par.first << ">" << std::endl;
