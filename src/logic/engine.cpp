@@ -5,7 +5,7 @@
 #include <stack>
 #include <string>
 #include "engine.hpp"
-#include "htmlInfo.hpp"
+#include "storage/htmlInfo.hpp"
 #include "obtenerEtiquetasPermitidas.hpp"
 #include "obtenerEtiquetasAtributos.hpp"
 
@@ -41,7 +41,7 @@ std::vector<std::string> AnalisisHTML::joinVectors( std::vector<std::string>& ve
 
 std::string AnalisisHTML:: obtenerUltimosDosCaracteres(const std::string& str) {
     if (str.length() >= 2) {
-        //std :: cout << str.substr(str.length() - 2) << std :: endl;
+        // std :: cout << str.substr(str.length() - 2) << std :: endl;
         return str.substr(str.length() - 2);
     } else {
         return str;

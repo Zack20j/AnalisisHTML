@@ -1,10 +1,10 @@
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
-#include "htmlInfo.hpp"
+#include "storage/htmlInfo.hpp"
 
 class AnalisisHTML {
     public:
