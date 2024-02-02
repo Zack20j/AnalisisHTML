@@ -10,10 +10,11 @@ class AnalisisHTML {
     public:
 
     AnalisisHTML();
+    void init(std::string texto);
     EtiquetaInfo analizarHTML(const std::string texto);
 
     private:
-
+    GuardarInformacion info = GuardarInformacion();
     std::map<std::string, std::vector<std::string>> obtenerAtributos(const std::string& match);
     std::vector<std::string> encontrarCoincidencias(std::string texto,std::string expresionRegular) ;
     std::string obtenerPrimeraPalabra(const std::string& texto);

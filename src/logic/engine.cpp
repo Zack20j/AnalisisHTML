@@ -12,6 +12,10 @@
 AnalisisHTML::AnalisisHTML() {
 }
 
+void AnalisisHTML:: init(std::string texto) {
+    info.save(analizarHTML(texto));
+}
+
 std::string AnalisisHTML:: obtenerPrimeraPalabra(const std::string& texto) {
     std::regex patron("\\b\\w+\\b");
     std::smatch matches;
