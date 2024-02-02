@@ -13,7 +13,9 @@ AnalisisHTML::AnalisisHTML() {
 }
 
 void AnalisisHTML:: init(std::string texto) {
-    info.save(analizarHTML(texto));
+    EtiquetaInfo etiquetaInfo = analizarHTML(texto);
+    info.save( etiquetaInfo );
+
 }
 
 std::string AnalisisHTML:: obtenerPrimeraPalabra(const std::string& texto) {

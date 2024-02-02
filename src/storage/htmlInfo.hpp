@@ -20,11 +20,11 @@ class GuardarInformacion {
     
     GuardarInformacion();
     void save(EtiquetaInfo info );
-    EtiquetaInfo load();
+    //EtiquetaInfo load( std::string String);
 
     private:
     std::string structToString(EtiquetaInfo info);
-    EtiquetaInfo stringToStruct( std::string String); 
+    //EtiquetaInfo stringToStruct( std::string String); 
     EtiquetaInfo info;
 };
 

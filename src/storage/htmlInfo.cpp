@@ -11,26 +11,29 @@ GuardarInformacion :: GuardarInformacion() {
 }
 
 void GuardarInformacion :: save(EtiquetaInfo etiquetaInfo) {
-
     std::string String = structToString(etiquetaInfo);
     std::ofstream file("htmlInfo.txt");
     file << String;
     file.close();
 }
 
+ /*EtiquetaInfo  GuardarInformacion :: load(std::string String) {
+    return stringToStruct(String);
+}*/
+
 std::string GuardarInformacion :: structToString(EtiquetaInfo info){
     std::stringstream ss;
     
     ss << "Balanceado: " << (info.balanceado ? "Sí" : "No") << "\n";
 
-    ss << "----------------------------------------------------------------\n";
+    ss << "------------------------------------------------------------------------------\n";
 
     ss << "Etiquetas No Permitidas:\n";
     for (const auto& etiqueta : info.etiquetasNoPermitidas) {
         ss << etiqueta << "\n";
     }
 
-    ss << "----------------------------------------------------------------\n";
+    ss << "------------------------------------------------------------------------------\n";
 
     ss << "Atributos por Etiqueta:\n";
     for (const auto& par : info.atributosPorEtiqueta) {
@@ -43,7 +46,7 @@ std::string GuardarInformacion :: structToString(EtiquetaInfo info){
         }
     }
 
-    ss << "----------------------------------------------------------------\n";
+    ss << "------------------------------------------------------------------------------\n";
 
     ss << "Enlaces por Etiqueta:\n";
     for (const auto& par : info.enlacesPorEtiqueta) {
@@ -55,7 +58,8 @@ std::string GuardarInformacion :: structToString(EtiquetaInfo info){
             ss << "\n";
         }
     }
-    ss << "----------------------------------------------------------------\n";
+
+    ss << "------------------------------------------------------------------------------\n";
 
     ss << "Imágenes por Etiqueta:\n";
     for (const auto& par : info.imagenesPorEtiqueta) {
@@ -68,7 +72,7 @@ std::string GuardarInformacion :: structToString(EtiquetaInfo info){
         }
     }
 
-    ss << "----------------------------------------------------------------\n";
+    ss << "------------------------------------------------------------------------------\n";
 
     ss << "Contador de Etiquetas:\n";
     for (const auto& par : info.contadorEtiquetas) {
@@ -80,7 +84,7 @@ std::string GuardarInformacion :: structToString(EtiquetaInfo info){
     return ss.str();
 }
 
-EtiquetaInfo GuardarInformacion :: stringToStruct( std::string String){
+/*EtiquetaInfo GuardarInformacion :: stringToStruct( std::string String){
 
     EtiquetaInfo info;
 
@@ -156,7 +160,7 @@ EtiquetaInfo GuardarInformacion :: stringToStruct( std::string String){
     }
 
     return info;
-}
+}*/
 
 
 
