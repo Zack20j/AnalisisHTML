@@ -1,13 +1,15 @@
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
-#include <fstream>
-#include <iomanip>
+#include "graphics/terminalUI.hpp"
 #include "logic/engine.hpp"
 
 int main() {
+    TermMenu terminalUI = TermMenu();
+    terminalUI.start();
     std::string nombreArchivoHTML = "../index.html";
 
     std::ifstream archivoHTML(nombreArchivoHTML);
