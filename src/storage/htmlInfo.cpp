@@ -5,21 +5,35 @@
 #include <iomanip>
 #include <limits>
 #include <fstream>
+#include <iostream>
 #include "htmlInfo.hpp"
 
 GuardarInformacion :: GuardarInformacion() {
 }
 
-void GuardarInformacion :: save(EtiquetaInfo etiquetaInfo) {
+void GuardarInformacion :: save(EtiquetaInfo etiquetaInfo,std :: string filename) {
     std::string String = structToString(etiquetaInfo);
-    std::ofstream file("htmlInfo.txt");
+    std::ofstream file(filename);
     file << String;
     file.close();
 }
 
- /*EtiquetaInfo  GuardarInformacion :: load(std::string String) {
-    return stringToStruct(String);
-}*/
+std::string GuardarInformacion :: load(std::string filename) {
+
+    std::ifstream file(filename);
+    std::string content;
+    
+    if (file.is_open()) {
+        std::string line;
+        while (std::getline(file, line)) {
+            content += line + "\n";
+        }
+        file.close();
+    } else {
+        content = "No se pudo abrir el archivo.";
+    }
+    return content;
+}
 
 std::string GuardarInformacion :: structToString(EtiquetaInfo info){
     std::stringstream ss;
@@ -84,83 +98,6 @@ std::string GuardarInformacion :: structToString(EtiquetaInfo info){
     return ss.str();
 }
 
-/*EtiquetaInfo GuardarInformacion :: stringToStruct( std::string String){
-
-    EtiquetaInfo info;
-
-    std::istringstream ss(String);
-    std::string line;
-
-    // Leer el estado de balanceado
-    std::getline(ss, line);
-    if (line.find("Sí") != std::string::npos) {
-        info.balanceado = true;
-    } else {
-        info.balanceado = false;
-    }
-
-    // Omitir líneas hasta llegar a las Etiquetas No Permitidas
-    while (std::getline(ss, line) && line.find("Etiquetas No Permitidas:") == std::string::npos);
-
-    // Leer las etiquetas no permitidas
-    while (std::getline(ss, line) && line != "----------------------------------------------------------------") {
-        info.etiquetasNoPermitidas.push_back(line);
-    }
-
-    // Omitir líneas hasta llegar a Atributos por Etiqueta
-    while (std::getline(ss, line) && line.find("Atributos por Etiqueta:") == std::string::npos);
-
-    // Leer atributos por etiqueta
-    while (std::getline(ss, line) && line != "----------------------------------------------------------------") {
-        std::istringstream lineStream(line);
-        std::string etiqueta, atributo;
-        lineStream >> etiqueta; // Leer la etiqueta
-        while (lineStream >> atributo) {
-            info.atributosPorEtiqueta[etiqueta].push_back(atributo);
-        }
-    }
-
-        // Repite el mismo proceso para Enlaces por Etiqueta
-    while (std::getline(ss, line) && line.find("Enlaces por Etiqueta:") == std::string::npos);
-
-    // Leer enlaces por etiqueta
-    while (std::getline(ss, line) && line != "----------------------------------------------------------------") {
-        std::istringstream lineStream(line);
-        std::string etiqueta, enlace;
-        lineStream >> etiqueta; // Leer la etiqueta
-        while (lineStream >> enlace) {
-            info.enlacesPorEtiqueta[etiqueta].push_back(enlace);
-        }
-    }
-
-    // Repite el mismo proceso para Imágenes por Etiqueta
-    while (std::getline(ss, line) && line.find("Imágenes por Etiqueta:") == std::string::npos);
-
-    // Leer imágenes por etiqueta
-    while (std::getline(ss, line) && line != "----------------------------------------------------------------") {
-        std::istringstream lineStream(line);
-        std::string etiqueta, imagen;
-        lineStream >> etiqueta; // Leer la etiqueta
-        while (lineStream >> imagen) {
-            info.imagenesPorEtiqueta[etiqueta].push_back(imagen);
-        }
-    }
-
-    // Omitir líneas hasta llegar a Contador de Etiquetas
-    while (std::getline(ss, line) && line.find("Contador de Etiquetas:") == std::string::npos);
-
-    // Leer contador de etiquetas
-    while (std::getline(ss, line)) {
-        std::istringstream lineStream(line);
-        std::string etiqueta;
-        int contador;
-        double porcentaje;
-        lineStream >> etiqueta >> contador >> porcentaje;
-        info.contadorEtiquetas[etiqueta] = contador;
-    }
-
-    return info;
-}*/
 
 
 

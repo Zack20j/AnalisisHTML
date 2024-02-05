@@ -23,7 +23,7 @@ int main() {
     archivoHTML.close();
 
     AnalisisHTML analisisHTML = AnalisisHTML();
-    analisisHTML.init(contenidoHTML);
+    analisisHTML.init(contenidoHTML,"htmlInfo.txt"); 
 
     return 0;
 }

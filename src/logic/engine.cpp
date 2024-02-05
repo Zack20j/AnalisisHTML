@@ -12,13 +12,19 @@
 AnalisisHTML::AnalisisHTML() {
 }
 
-void AnalisisHTML:: init(std::string texto) {
+std :: string AnalisisHTML:: init(std::string texto, std ::string filename) {
     EtiquetaInfo etiquetaInfo = analizarHTML(texto);
-    info.save( etiquetaInfo );
+    info.save(etiquetaInfo, filename);
 
+    std :: cout << info.load(filename) << std :: endl;
+    return info.load(filename);
 }
 
-std::string AnalisisHTML:: obtenerPrimeraPalabra(const std::string& texto) {
+std::string AnalisisHTML:: load(std :: string filename) {
+    return info.load(filename);
+}
+
+std::string AnalisisHTML:: obtenerPrimeraPalabra( std::string texto) {
     std::regex patron("\\b\\w+\\b");
     std::smatch matches;
 
@@ -29,7 +35,7 @@ std::string AnalisisHTML:: obtenerPrimeraPalabra(const std::string& texto) {
     return "";
 }
 
-std::vector<std::string> AnalisisHTML::joinVectors( std::vector<std::string>& vector1,  std::vector<std::string>& vector2) {
+std::vector<std::string> AnalisisHTML::joinVectors( std::vector<std::string> vector1,  std::vector<std::string> vector2) {
     std::vector<std::string> resultado;
 
     // Insertar elementos de vector1
@@ -45,7 +51,7 @@ std::vector<std::string> AnalisisHTML::joinVectors( std::vector<std::string>& ve
     return resultado;
 }
 
-std::string AnalisisHTML:: obtenerUltimosDosCaracteres(const std::string& str) {
+std::string AnalisisHTML:: obtenerUltimosDosCaracteres( std::string str) {
     if (str.length() >= 2) {
         // std :: cout << str.substr(str.length() - 2) << std :: endl;
         return str.substr(str.length() - 2);
@@ -68,7 +74,7 @@ std::vector<std::string> AnalisisHTML:: encontrarCoincidencias(std::string texto
     return coincidencias;
 }
 
-EtiquetaInfo AnalisisHTML:: analizarHTML(const std::string texto) {
+EtiquetaInfo AnalisisHTML:: analizarHTML( std::string texto) {
 
     std::stack<std::string> pila;
     EtiquetaInfo etiquetaInfo;
