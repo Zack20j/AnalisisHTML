@@ -15,44 +15,51 @@ TermMenu::~TermMenu() {
 
 void TermMenu::start() {
     using namespace ftxui;
-    ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
-
-    // auto menu = Container::Vertical({
-    //     MenuEntry("Ver documento"),
-    //     MenuEntry("Analizar documento"),
-    //     MenuEntry("Salir"),
-    // });
+    ScreenInteractive screen = ScreenInteractive::Fullscreen();
 
     const std::vector<std::string> entries = {
-        "Ver documento",
-        "Analizar documento",
-        "Salir",
+        "Ver documento ",
+        "Analizar documento ",
+        "Salir ",
     };
     MenuOption option;
     Closure screen_exit = screen.ExitLoopClosure();
     option.on_enter = [this, screen_exit]() {
         switch (optionSelected) {
             case 0:
+                // Mostrar el documento
+                this->showMenu = false;
+                this->showAnalisis = !this->showMenu;
                 break;
             case 1:
+                // Analizar el documento
+                this->showMenu = true;
+                this->showAnalisis = !this->showMenu;
                 break;
             default:
                 screen_exit();
                 break;
         }
     };
-    Component menu = Menu(&entries, &optionSelected, option);
-    Component actualMenu = Container::Horizontal({menu | border});
-    Component render = Renderer(actualMenu, [&] {
-        return hbox({
+    Component menu = Container::Horizontal({
+        Maybe(Menu(&entries, &optionSelected, option) | border,
+              &showMenu),  // Menu principal
+        Maybe(Input(), &showAnalisis),
+    });
+    Component render = Renderer(menu, [&] {
+        Element result = hbox({
             emptyElement() | flex,
             vbox({
                 emptyElement() | flex,
-                actualMenu->Render(),
+                menu->Render(),
                 emptyElement() | flex,
             }),
             emptyElement() | flex,
         });
+        if (false) {  // Mostrar Documento
+            result = paragraphAlignLeft("Hola") | border | flex;
+        }
+        return result;
     });
 
     screen.Loop(render);

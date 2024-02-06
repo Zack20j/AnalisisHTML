@@ -9,5 +9,7 @@ class TermMenu {
 
    private:
     int optionSelected = 0;
+    bool showMenu = true;
+    bool showAnalisis = false;
 };
 #endif
