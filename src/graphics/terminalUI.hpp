@@ -8,8 +8,9 @@ class TermMenu {
     void start();
 
    private:
+    void showDocument();
+
     int optionSelected = 0;
-    bool showMenu = true;
-    bool showAnalisis = false;
+    int docScrollPos = 0;
 };
 #endif
