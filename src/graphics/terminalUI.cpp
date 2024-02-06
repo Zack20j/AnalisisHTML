@@ -43,11 +43,17 @@ void TermMenu::start() {
     };
     Component menu = Menu(&entries, &optionSelected, option);
     Component actualMenu = Container::Horizontal({menu | border});
-    // auto render = Renderer(actualMenu, [&] {
-    //     return vbox({
-    //
-    //     });
-    // });
+    Component render = Renderer(actualMenu, [&] {
+        return hbox({
+            emptyElement() | flex,
+            vbox({
+                emptyElement() | flex,
+                actualMenu->Render(),
+                emptyElement() | flex,
+            }),
+            emptyElement() | flex,
+        });
+    });
 
-    screen.Loop(actualMenu);
+    screen.Loop(render);
 }
