@@ -1,0 +1,34 @@
+Balanceado: Sí
+------------------------------------------------------------------------------
+Etiquetas No Permitidas:
+hola
+hola
+------------------------------------------------------------------------------
+Atributos por Etiqueta:
+Etiqueta: a, Atributos: rel href 
+Etiqueta: div, Atributos: class 
+Etiqueta: html, Atributos: lang 
+Etiqueta: img, Atributos: src 
+Etiqueta: link, Atributos: real href 
+Etiqueta: meta, Atributos: charset name content 
+------------------------------------------------------------------------------
+Enlaces por Etiqueta:
+Etiqueta: a, Enlaces: https://www.ejemplo.com https://www.ejemplo2.com 
+Etiqueta: link, Enlaces: https://www.ejemplo1.com https://aaawww.ejemplo1.com 
+------------------------------------------------------------------------------
+Imágenes por Etiqueta:
+Etiqueta: img, Imágenes: https://www.ejemplodeimagen.com /build/AnalisisHTML.png 
+------------------------------------------------------------------------------
+Contador de Etiquetas:
+Etiqueta: a, Contador: 2, Porcentaje: 11.76%
+Etiqueta: body, Contador: 1, Porcentaje: 5.88%
+Etiqueta: div, Contador: 1, Porcentaje: 5.88%
+Etiqueta: h1, Contador: 1, Porcentaje: 5.88%
+Etiqueta: h2, Contador: 1, Porcentaje: 5.88%
+Etiqueta: head, Contador: 1, Porcentaje: 5.88%
+Etiqueta: html, Contador: 1, Porcentaje: 5.88%
+Etiqueta: img, Contador: 2, Porcentaje: 11.76%
+Etiqueta: link, Contador: 2, Porcentaje: 11.76%
+Etiqueta: meta, Contador: 2, Porcentaje: 11.76%
+Etiqueta: p, Contador: 2, Porcentaje: 11.76%
+Etiqueta: title, Contador: 1, Porcentaje: 5.88%
