@@ -40,7 +40,7 @@ void TermMenu::start() {
             vbox({
                 separatorEmpty() | flex,
                 window(text("Introduzca la direccion al archivo:"),
-                       input->Render()),
+                       input->Render()) | color(Color::CyanLight),
                 separatorEmpty() | flex,
             }) | flex,
             separatorEmpty() | flex,
@@ -60,7 +60,7 @@ void TermMenu::start() {
 
     // Menu principal
     const std::vector<std::string> entries = {
-        "Ver documento ",
+        "Visualizar documento ",
         "Analizar documento ",
         "Salir ",
     };
@@ -85,7 +85,7 @@ void TermMenu::start() {
             separatorEmpty() | flex,
             vbox({
                 separatorEmpty() | flex,
-                menu->Render() | borderRounded,
+                menu->Render() | borderRounded | color(Color::CyanLight),
                 separatorEmpty() | flex,
             }) | flex,
             separatorEmpty() | flex,
@@ -127,10 +127,10 @@ void TermMenu::showDocument() {
                    vflow(elements) | focusPosition(0, docScrollPos) |
                        vscroll_indicator | yframe | borderRounded | yflex,
                    hbox({
-                       text("q") | bold,
-                       text(" para volver, "),
-                       text("k/Flecha arriba o j/Flecha abajo") | bold,
-                       text(" para desplazarse"),
+                       text("q") | bold | color(Color::CyanLight),
+                       text(" para volver, ") | color(Color::CyanLight),
+                       text("k/Flecha arriba o j/Flecha abajo") | bold | color(Color::CyanLight),
+                       text(" para desplazarse") | color(Color::CyanLight),
                    }) | hcenter |
                        borderEmpty | size(HEIGHT, EQUAL, 3),
                }) |
