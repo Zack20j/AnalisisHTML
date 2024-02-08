@@ -1,12 +1,12 @@
 #include "graphics/terminalUI.hpp"
 #include <algorithm>
+#include <cstdlib>
 #include <ftxui/component/component_options.hpp>
 #include <ftxui/component/event.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ftxui/screen/screen.hpp>
 #include <sstream>
-#include <string>
 #include "ftxui/component/component.hpp"       // for Menu, Horizontal, Renderer
 #include "ftxui/component/component_base.hpp"  // for ComponentBase
 #include "ftxui/dom/elements.hpp"
@@ -21,14 +21,50 @@ TermMenu::~TermMenu() {
 void TermMenu::start() {
     using namespace ftxui;
     ScreenInteractive screen = ScreenInteractive::Fullscreen();
+    Closure screen_exit = screen.ExitLoopClosure();
 
+    // Menu para introducir el nombre del archivo
+    std::string nombreArchivoHTML = "../index.html";
+    InputOption opts;
+    opts.on_enter = [&]() {
+        if (filePath.empty()) {  // || !FileManager::exists(filePath)
+            filePath = nombreArchivoHTML;
+        }
+        screen_exit();
+    };
+    Component input = Input(&filePath, nombreArchivoHTML, opts);
+
+    Component renderer = Renderer(input, [&] {
+        return hbox({
+            separatorEmpty() | flex,
+            vbox({
+                separatorEmpty() | flex,
+                window(text("Introduzca la direccion al archivo:"),
+                       input->Render()),
+                separatorEmpty() | flex,
+            }) | flex,
+            separatorEmpty() | flex,
+        });
+    });
+
+    renderer |= CatchEvent([&](Event event) {
+        if (event == Event::Character('q')) {
+            screen_exit();
+            exit(0);
+            return true;
+        }
+        return false;
+    });
+
+    screen.Loop(renderer);
+
+    // Menu principal
     const std::vector<std::string> entries = {
         "Ver documento ",
         "Analizar documento ",
         "Salir ",
     };
     MenuOption option;
-    Closure screen_exit = screen.ExitLoopClosure();
     option.on_enter = [&]() {
         switch (optionSelected) {
             case 0:
@@ -44,7 +80,7 @@ void TermMenu::start() {
         }
     };
     Component menu = Menu(&entries, &optionSelected, option);
-    Component renderer = Renderer(menu, [&] {
+    renderer = Renderer(menu, [&] {
         return hbox({
             separatorEmpty() | flex,
             vbox({
@@ -58,7 +94,7 @@ void TermMenu::start() {
 
     renderer |= CatchEvent([&](Event event) {
         if (event == Event::Character('q')) {
-            screen.ExitLoopClosure()();
+            screen_exit();
             return true;
         }
         return false;
@@ -83,8 +119,6 @@ void TermMenu::showDocument() {
         elements.push_back(paragraph(str));
     }
     str.clear();
-    // elements.insert(elements.begin(),
-    //                 paragraph("") | focusCursorUnderlineBlinking);
 
     Closure screenExit = screen.ExitLoopClosure();
     Component backButton = Button("Volver", [&] { screenExit(); });
