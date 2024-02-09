@@ -1,25 +1,25 @@
+#include "engine.hpp"
 #include <map>
 #include <regex>
 #include <stack>
 #include <string>
-#include "engine.hpp"
-#include "storage/htmlInfo.hpp"
 #include "obtenerEtiquetasPermitidas.hpp"
+#include "storage/htmlInfo.hpp"
 
 AnalisisHTML::AnalisisHTML() {
 }
 
-std :: string AnalisisHTML:: init(std::string texto, std ::string filename) {
+std ::string AnalisisHTML::init(std::string texto, std ::string filename) {
     EtiquetaInfo etiquetaInfo = analizarHTML(texto);
     info.save(etiquetaInfo, filename);
     return info.load(filename);
 }
 
-std::string AnalisisHTML:: load(std :: string filename) {
+std::string AnalisisHTML::load(std ::string filename) {
     return info.load(filename);
 }
 
-std::string AnalisisHTML:: obtenerPrimeraPalabra( std::string texto) {
+std::string AnalisisHTML::obtenerPrimeraPalabra(std::string texto) {
     std::regex patron("\\b\\w+\\b");
     std::smatch matches;
 
@@ -30,7 +30,9 @@ std::string AnalisisHTML:: obtenerPrimeraPalabra( std::string texto) {
     return "";
 }
 
-std::vector<std::string> AnalisisHTML::unirVectores( std::vector<std::string> vector1,  std::vector<std::string> vector2) {
+std::vector<std::string> AnalisisHTML::unirVectores(
+    std::vector<std::string> vector1,
+    std::vector<std::string> vector2) {
     std::vector<std::string> resultado;
 
     // Insertar elementos de vector1
@@ -38,7 +40,8 @@ std::vector<std::string> AnalisisHTML::unirVectores( std::vector<std::string> ve
 
     // Insertar elementos de vector2 que no estén en vector1
     for (const auto& elemento : vector2) {
-        if (std::find(vector1.begin(), vector1.end(), elemento) == vector1.end()) {
+        if (std::find(vector1.begin(), vector1.end(), elemento) ==
+            vector1.end()) {
             resultado.push_back(elemento);
         }
     }
@@ -46,7 +49,7 @@ std::vector<std::string> AnalisisHTML::unirVectores( std::vector<std::string> ve
     return resultado;
 }
 
-std::string AnalisisHTML:: obtenerUltimosDosCaracteres( std::string str) {
+std::string AnalisisHTML::obtenerUltimosDosCaracteres(std::string str) {
     if (str.length() >= 2) {
         return str.substr(str.length() - 2);
     } else {
@@ -54,7 +57,9 @@ std::string AnalisisHTML:: obtenerUltimosDosCaracteres( std::string str) {
     }
 }
 
-std::vector<std::string> AnalisisHTML:: encontrarCoincidencias(std::string texto,std::string expresionRegular) {
+std::vector<std::string> AnalisisHTML::encontrarCoincidencias(
+    std::string texto,
+    std::string expresionRegular) {
     std::vector<std::string> coincidencias;
     std::string link = texto;
     std::regex patronEnlace(expresionRegular);
@@ -68,16 +73,16 @@ std::vector<std::string> AnalisisHTML:: encontrarCoincidencias(std::string texto
     return coincidencias;
 }
 
-EtiquetaInfo AnalisisHTML:: analizarHTML( std::string texto) {
-
+EtiquetaInfo AnalisisHTML::analizarHTML(std::string texto) {
     std::stack<std::string> pila;
     EtiquetaInfo etiquetaInfo;
-    std::map<std::string, int> etiquetasPermitidas = obtenerEtiquetasPermitidas();
-    
+    std::map<std::string, int> etiquetasPermitidas =
+        obtenerEtiquetasPermitidas();
+
     std::regex patron("<[^><]*>");
     std::sregex_iterator it(texto.begin(), texto.end(), patron);
     std::sregex_iterator itEnd;
-    
+
     for (; it != itEnd; ++it) {
         std::string match = it->str();
 
@@ -93,14 +98,19 @@ EtiquetaInfo AnalisisHTML:: analizarHTML( std::string texto) {
             continue;
         }
 
-        std::vector<std::string> atributos = encontrarCoincidencias(match, "\\s*([^=\\s]+)\\s*=\\s*\"([^\"]*)\"");
-        std::vector<std::string> links = encontrarCoincidencias(match, "(?:a|link)\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"[^>]*");
-        std::vector<std::string> images = encontrarCoincidencias(match, "<img\\s+[^>]*src\\s*=\\s*\"([^\"]*)\"[^>]*>");
+        std::vector<std::string> atributos = encontrarCoincidencias(
+            match, "\\s*([^=\\s]+)\\s*=\\s*\"([^\"]*)\"");
+        std::vector<std::string> links = encontrarCoincidencias(
+            match, "(?:a|link)\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"[^>]*");
+        std::vector<std::string> images = encontrarCoincidencias(
+            match, "<img\\s+[^>]*src\\s*=\\s*\"([^\"]*)\"[^>]*>");
 
-        etiquetaInfo.atributosPorEtiqueta[tag] = unirVectores(etiquetaInfo.atributosPorEtiqueta[tag], atributos);
-        etiquetaInfo.enlacesPorEtiqueta[tag] = unirVectores(etiquetaInfo.enlacesPorEtiqueta[tag], links);
-        etiquetaInfo.imagenesPorEtiqueta[tag] = unirVectores(etiquetaInfo.imagenesPorEtiqueta[tag], images);
-
+        etiquetaInfo.atributosPorEtiqueta[tag] =
+            unirVectores(etiquetaInfo.atributosPorEtiqueta[tag], atributos);
+        etiquetaInfo.enlacesPorEtiqueta[tag] =
+            unirVectores(etiquetaInfo.enlacesPorEtiqueta[tag], links);
+        etiquetaInfo.imagenesPorEtiqueta[tag] =
+            unirVectores(etiquetaInfo.imagenesPorEtiqueta[tag], images);
 
         if (obtenerUltimosDosCaracteres(match) == "/>") {
             etiquetaInfo.contadorEtiquetas[tag]++;
@@ -112,11 +122,11 @@ EtiquetaInfo AnalisisHTML:: analizarHTML( std::string texto) {
                 etiquetaInfo.balanceado = false;
             }
             pila.pop();
-            
+
             etiquetaInfo.contadorEtiquetas[tag]++;
             etiquetaInfo.totalEtiquetas++;
 
-        }else {
+        } else {
             pila.push(tag);
         }
     }
