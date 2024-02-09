@@ -4,13 +4,13 @@
 #include <string>
 
 class FileManager {
-public:
-    FileManager(const std::string& filename);
-    bool writeFile(const std::string& content);
+   public:
+    FileManager(std::string filename);
+    bool writeFile(std::string content);
     std::string readFile();
 
-private:
+   private:
     std::string filename;
 };
 
-#endif // ARCHIVE_HPP
+#endif  // ARCHIVE_HPP

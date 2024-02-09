@@ -10,8 +10,9 @@ class TermMenu {
 
    private:
     void showDocument();
+    void analizeDocument();
 
-    std::string filePath = "";
+    std::string filePath;
     int optionSelected = 0;
     int docScrollPos = 0;
 };
