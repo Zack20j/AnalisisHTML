@@ -128,7 +128,7 @@ void TermMenu::showDocument() {
     std::stringstream streamHTML(textoHTML);
     Elements elements = {};
     while (std::getline(streamHTML, str, '\n')) {
-        elements.push_back(paragraph(str));
+        elements.push_back(paragraph(str) | color(Color::White));
     }
     str.clear();
 
@@ -136,14 +136,16 @@ void TermMenu::showDocument() {
     Component renderer = Renderer(backButton, [&] {
         return vbox({
                    vflow(elements) | focusPosition(0, docScrollPos) |
-                       vscroll_indicator | yframe | borderRounded | yflex,
+                       vscroll_indicator | yframe | borderRounded | yflex |
+                       color(Color::CyanLight),
                    hbox({
                        text("q") | bold,
                        text(" para volver, "),
                        text("k/Flecha arriba o j/Flecha abajo") | bold,
                        text(" para desplazarse"),
                    }) | hcenter |
-                       borderEmpty | size(HEIGHT, EQUAL, 3),
+                       color(Color::CyanLight) | borderEmpty |
+                       size(HEIGHT, EQUAL, 3),
                }) |
                borderEmpty;
     });
@@ -190,7 +192,7 @@ void TermMenu::analizeDocument() {
     std::stringstream streamHTML(resultado);
     Elements elements = {};
     while (std::getline(streamHTML, str, '\n')) {
-        elements.push_back(paragraph(str));
+        elements.push_back(paragraph(str) | color(Color::White));
     }
     str.clear();
 
@@ -198,7 +200,8 @@ void TermMenu::analizeDocument() {
     Component renderer = Renderer(backButton, [&] {
         return vbox({
                    vflow(elements) | focusPosition(0, docScrollPos) |
-                       vscroll_indicator | yframe | borderRounded | yflex,
+                       vscroll_indicator | yframe | borderRounded | yflex |
+                       color(Color::CyanLight),
                    hbox({
                        text("q") | bold | color(Color::CyanLight),
                        text(" para volver, ") | color(Color::CyanLight),
