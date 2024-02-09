@@ -5,7 +5,6 @@
 #include "engine.hpp"
 #include "storage/htmlInfo.hpp"
 #include "obtenerEtiquetasPermitidas.hpp"
-#include "obtenerEtiquetasAtributos.hpp"
 
 AnalisisHTML::AnalisisHTML() {
 }
