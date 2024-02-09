@@ -1,5 +1,3 @@
-#include <iomanip>
-#include <iostream>
 #include <map>
 #include <regex>
 #include <stack>
@@ -15,8 +13,6 @@ AnalisisHTML::AnalisisHTML() {
 std :: string AnalisisHTML:: init(std::string texto, std ::string filename) {
     EtiquetaInfo etiquetaInfo = analizarHTML(texto);
     info.save(etiquetaInfo, filename);
-
-    std :: cout << info.load(filename) << std :: endl;
     return info.load(filename);
 }
 
@@ -35,7 +31,7 @@ std::string AnalisisHTML:: obtenerPrimeraPalabra( std::string texto) {
     return "";
 }
 
-std::vector<std::string> AnalisisHTML::joinVectors( std::vector<std::string> vector1,  std::vector<std::string> vector2) {
+std::vector<std::string> AnalisisHTML::unirVectores( std::vector<std::string> vector1,  std::vector<std::string> vector2) {
     std::vector<std::string> resultado;
 
     // Insertar elementos de vector1
@@ -103,9 +99,9 @@ EtiquetaInfo AnalisisHTML:: analizarHTML( std::string texto) {
         std::vector<std::string> links = encontrarCoincidencias(match, "(?:a|link)\\s+[^>]*href=\"([^\"]*)\"[^>]*");
         std::vector<std::string> images = encontrarCoincidencias(match, "<img\\s+[^>]*src=\"([^\"]*)\"[^>]*>");
 
-        etiquetaInfo.atributosPorEtiqueta[tag] = joinVectors(etiquetaInfo.atributosPorEtiqueta[tag], atributos);
-        etiquetaInfo.enlacesPorEtiqueta[tag] = joinVectors(etiquetaInfo.enlacesPorEtiqueta[tag], links);
-        etiquetaInfo.imagenesPorEtiqueta[tag] = joinVectors(etiquetaInfo.imagenesPorEtiqueta[tag], images);
+        etiquetaInfo.atributosPorEtiqueta[tag] = unirVectores(etiquetaInfo.atributosPorEtiqueta[tag], atributos);
+        etiquetaInfo.enlacesPorEtiqueta[tag] = unirVectores(etiquetaInfo.enlacesPorEtiqueta[tag], links);
+        etiquetaInfo.imagenesPorEtiqueta[tag] = unirVectores(etiquetaInfo.imagenesPorEtiqueta[tag], images);
 
 
         if (obtenerUltimosDosCaracteres(match) == "/>") {
