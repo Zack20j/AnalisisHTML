@@ -48,7 +48,6 @@ std::vector<std::string> AnalisisHTML::unirVectores( std::vector<std::string> ve
 
 std::string AnalisisHTML:: obtenerUltimosDosCaracteres( std::string str) {
     if (str.length() >= 2) {
-        // std :: cout << str.substr(str.length() - 2) << std :: endl;
         return str.substr(str.length() - 2);
     } else {
         return str;
@@ -94,9 +93,9 @@ EtiquetaInfo AnalisisHTML:: analizarHTML( std::string texto) {
             continue;
         }
 
-        std::vector<std::string> atributos = encontrarCoincidencias(match, "\\s+([^=\\s]+)=\"([^\"]*)\"");
-        std::vector<std::string> links = encontrarCoincidencias(match, "(?:a|link)\\s+[^>]*href=\"([^\"]*)\"[^>]*");
-        std::vector<std::string> images = encontrarCoincidencias(match, "<img\\s+[^>]*src=\"([^\"]*)\"[^>]*>");
+        std::vector<std::string> atributos = encontrarCoincidencias(match, "\\s*([^=\\s]+)\\s*=\\s*\"([^\"]*)\"");
+        std::vector<std::string> links = encontrarCoincidencias(match, "(?:a|link)\\s+[^>]*href\\s*=\\s*\"([^\"]*)\"[^>]*");
+        std::vector<std::string> images = encontrarCoincidencias(match, "<img\\s+[^>]*src\\s*=\\s*\"([^\"]*)\"[^>]*>");
 
         etiquetaInfo.atributosPorEtiqueta[tag] = unirVectores(etiquetaInfo.atributosPorEtiqueta[tag], atributos);
         etiquetaInfo.enlacesPorEtiqueta[tag] = unirVectores(etiquetaInfo.enlacesPorEtiqueta[tag], links);
