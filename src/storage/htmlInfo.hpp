@@ -1,7 +1,7 @@
 #ifndef HTMLINFO_HPP
 #define HTMLINFO_HPP
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
 #include "archive.hpp"
 
@@ -16,16 +16,14 @@ struct EtiquetaInfo {
 };
 
 class GuardarInformacion {
-    public:
-    
+   public:
     GuardarInformacion();
-    void save(EtiquetaInfo info, std :: string filename);
-    std::string load( std::string  filename );
+    void save(EtiquetaInfo info, std ::string filename);
+    std::string load(std::string filename);
 
-    private:
+   private:
     std::string structToString(EtiquetaInfo info);
     EtiquetaInfo info;
 };
 
-
-#endif // HTMLINFO_HPP
+#endif  // HTMLINFO_HPP

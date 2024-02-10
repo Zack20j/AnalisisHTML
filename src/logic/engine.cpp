@@ -9,7 +9,7 @@
 AnalisisHTML::AnalisisHTML() {
 }
 
-std ::string AnalisisHTML::init(std::string texto, std ::string filename) {
+std::string AnalisisHTML::init(std::string texto, std ::string filename) {
     EtiquetaInfo etiquetaInfo = analizarHTML(texto);
     info.save(etiquetaInfo, filename);
     return info.load(filename);
@@ -115,21 +115,17 @@ EtiquetaInfo AnalisisHTML::analizarHTML(std::string texto) {
         if (obtenerUltimosDosCaracteres(match) == "/>") {
             etiquetaInfo.contadorEtiquetas[tag]++;
             etiquetaInfo.totalEtiquetas++;
-        }
-
-        else if (match.find("</") == 0) {
+        } else if (match.find("</") == 0) {
             if (pila.empty() || tag != pila.top()) {
                 etiquetaInfo.balanceado = false;
             }
-            
-            if (etiquetaInfo.balanceado){
+
+            if (etiquetaInfo.balanceado) {
                 pila.pop();
             }
-            
- 
+
             etiquetaInfo.contadorEtiquetas[tag]++;
             etiquetaInfo.totalEtiquetas++;
-
         } else {
             pila.push(tag);
         }
@@ -137,5 +133,4 @@ EtiquetaInfo AnalisisHTML::analizarHTML(std::string texto) {
 
     etiquetaInfo.balanceado = pila.empty();
     return etiquetaInfo;
-
 }
