@@ -121,8 +121,12 @@ EtiquetaInfo AnalisisHTML::analizarHTML(std::string texto) {
             if (pila.empty() || tag != pila.top()) {
                 etiquetaInfo.balanceado = false;
             }
-            pila.pop();
-
+            
+            if (etiquetaInfo.balanceado){
+                pila.pop();
+            }
+            
+ 
             etiquetaInfo.contadorEtiquetas[tag]++;
             etiquetaInfo.totalEtiquetas++;
 
@@ -133,4 +137,5 @@ EtiquetaInfo AnalisisHTML::analizarHTML(std::string texto) {
 
     etiquetaInfo.balanceado = pila.empty();
     return etiquetaInfo;
+
 }
